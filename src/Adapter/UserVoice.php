@@ -40,6 +40,9 @@ class UserVoice implements ServiceAdapter
      * @param string $title
      * @param string $content
      * @param array  $attributes
+     *
+     * @throws \ErrorException
+     * @return integer new ticket ID
      */
     public function createTicket($email, $title, $content, array $attributes = array())
     {
@@ -51,6 +54,10 @@ class UserVoice implements ServiceAdapter
                 'message' => $content,
             )
         ));
-        var_dump($response);
+        if (isset($response['ticket']) && isset($response['ticket']['id'])) {
+            return $response['ticket']['id'];
+        } else {
+            throw new \ErrorException("Ticket was not created successfully");
+        }
     }
 }
